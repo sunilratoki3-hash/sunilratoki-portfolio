@@ -29,9 +29,15 @@
                     </h1>
                 </div>
 
-                <span class="px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-sm">
-                    Read
-                </span>
+                @if ($message->is_read)
+    <span class="px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-sm">
+        Read
+    </span>
+@else
+    <span class="px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 text-sm">
+        Unread
+    </span>
+@endif
             </div>
 
             <div class="border-t border-slate-800 my-8"></div>
@@ -83,6 +89,17 @@
 
                 <a href="mailto:{{ $message->email }}?subject={{ rawurlencode('Re: ' . $message->subject) }}"
                     class="px-5 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl transition">
+@if (!$message->is_read)
+    <form action="{{ route('admin.messages.read', $message) }}" method="POST">
+        @csrf
+        @method('PATCH')
+
+        <button type="submit"
+            class="px-5 py-3 bg-green-500/10 text-green-400 hover:bg-green-500/20 rounded-xl transition">
+            Mark as Read
+        </button>
+    </form>
+@endif
                     Reply via Email
                 </a>
 

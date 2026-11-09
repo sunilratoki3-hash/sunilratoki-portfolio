@@ -6,6 +6,8 @@ use App\Models\Project;
 use App\Models\ContactMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -21,11 +23,28 @@ class AdminController extends Controller
             'password' => 'required',
         ]);
 
+        // Rate-limit key based on email and IP address
+        $key = Str::lower($request->input('email')) . '|' . $request->ip();
+
+        // Maximum 5 failed attempts within 60 seconds
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            $seconds = RateLimiter::availableIn($key);
+
+            return back()->with(
+                'error',
+                "Too many login attempts. Try again in {$seconds} seconds."
+            );
+        }
+
         if (Auth::guard('admin')->attempt($credentials)) {
+            RateLimiter::clear($key);
+
             $request->session()->regenerate();
 
             return redirect()->route('admin.dashboard');
         }
+
+        RateLimiter::hit($key, 60);
 
         return back()->with('error', 'Invalid email or password.');
     }
@@ -42,19 +61,16 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        // Message statistics
         $totalMessages = ContactMessage::count();
 
         $unreadMessages = ContactMessage::where('is_read', false)->count();
 
-        // Project statistics
         $totalProjects = Project::count();
 
         $publishedProjects = Project::where('is_published', true)->count();
 
         $draftProjects = Project::where('is_published', false)->count();
 
-        // Latest 5 messages
         $recentMessages = ContactMessage::latest()
             ->take(5)
             ->get();
@@ -69,7 +85,6 @@ class AdminController extends Controller
         ));
     }
 
-    // Display all contact messages
     public function messages(Request $request)
     {
         $filters = $request->validate([
@@ -107,33 +122,27 @@ class AdminController extends Controller
         ));
     }
 
-    // Display one message
+    // Display message without changing its read status
     public function showMessage(ContactMessage $message)
     {
-        // Automatically mark as read when opened
-        if (!$message->is_read) {
-            $message->update(['is_read' => true]);
-        }
-
         return view('admin.message-show', compact('message'));
     }
 
-    // Mark message as read
+    // Explicitly mark a message as read
     public function markMessageRead(ContactMessage $message)
     {
-        $message->update(['is_read' => true]);
+        $message->is_read = true;
+        $message->save();
 
         return back()->with('success', 'Message marked as read.');
     }
 
-    // Delete a message
     public function destroyMessage(ContactMessage $message)
     {
         $message->delete();
 
         return redirect()
             ->route('admin.messages')
-            ->with('success', 'Message deleted successfully.');
+            ->with('success', 'Message deleted successfully!');
     }
 }
-

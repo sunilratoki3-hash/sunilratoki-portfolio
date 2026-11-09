@@ -154,12 +154,10 @@
         <header class="fixed top-0 left-0 right-0 z-50 px-4 md:px-12 py-5">
             <nav class="glass max-w-7xl mx-auto rounded-2xl px-5 md:px-7 py-4 flex items-center justify-between">
 
-                <!-- LOGO -->
                 <a href="{{ route('home') }}" class="text-2xl font-black tracking-tight">
                     SR<span class="text-cyan-400">.</span>
                 </a>
 
-                <!-- NAVIGATION LINKS -->
                 <div class="hidden md:flex items-center gap-8 text-sm font-medium">
                     <a href="{{ route('home') }}" class="nav-link">Home</a>
                     <a href="{{ route('about') }}" class="nav-link">About</a>
@@ -168,7 +166,6 @@
                     <a href="{{ route('contact') }}" class="nav-link active">Contact</a>
                 </div>
 
-                <!-- CTA BUTTON -->
                 <a href="{{ route('contact') }}"
                     class="rounded-full bg-cyan-400 text-slate-950 px-5 py-2.5 text-sm font-bold hover:bg-cyan-300 transition">
                     Let's Talk ↗
@@ -202,7 +199,6 @@
                 </div>
 
             </section>
-
 
             <!-- CONTACT CONTENT -->
             <section class="px-6 md:px-16 py-16">
@@ -264,6 +260,7 @@
                                 </p>
 
                                 <div class="flex flex-wrap gap-2 mt-4">
+
                                     <span
                                         class="rounded-full bg-cyan-400/10 border border-cyan-400/20 px-4 py-2 text-xs text-cyan-200">
                                         Full-Stack Development
@@ -278,31 +275,29 @@
                                         class="rounded-full bg-blue-400/10 border border-blue-400/20 px-4 py-2 text-xs text-blue-200">
                                         Collaboration
                                     </span>
+
                                 </div>
                             </div>
 
                         </div>
 
-
-
                         <!-- RIGHT SIDE FORM -->
                         <div id="contact-form" class="glass rounded-3xl p-7 md:p-10 reveal">
 
-                            @if (session('success'))
-                                <div
-                                    class="mb-6 rounded-xl border border-green-400/30 bg-green-400/10 p-4 text-green-300">
-                                    {{ session('success') }}
-                                </div>
-                            @endif
-
+                            <!-- VALIDATION ERRORS -->
                             @if ($errors->any())
                                 <div class="mb-6 rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-red-300">
-                                    <p class="font-bold mb-2">Please fix the following errors:</p>
+
+                                    <p class="font-bold mb-2">
+                                        Please fix the following errors:
+                                    </p>
+
                                     <ul class="list-disc pl-5 text-sm space-y-1">
                                         @foreach ($errors->all() as $error)
                                             <li>{{ $error }}</li>
                                         @endforeach
                                     </ul>
+
                                 </div>
                             @endif
 
@@ -316,45 +311,60 @@
 
                             <form id="message-form" action="{{ route('contact.store') }}" method="POST"
                                 class="space-y-6">
+
                                 @csrf
 
                                 <div>
-                                    <label for="name" class="block text-sm text-slate-300 mb-2">Your Name</label>
+                                    <label for="name" class="block text-sm text-slate-300 mb-2">
+                                        Your Name
+                                    </label>
+
                                     <input type="text" id="name" name="name" value="{{ old('name') }}"
                                         class="form-field" placeholder="Enter your name" required>
                                 </div>
 
                                 <div>
-                                    <label for="email" class="block text-sm text-slate-300 mb-2">Your Email</label>
+                                    <label for="email" class="block text-sm text-slate-300 mb-2">
+                                        Your Email
+                                    </label>
+
                                     <input type="email" id="email" name="email" value="{{ old('email') }}"
                                         class="form-field" placeholder="Enter your email" required>
                                 </div>
 
                                 <div>
-                                    <label for="phone" class="block text-sm text-slate-300 mb-2">Contact Number
-                                        (Optional)</label>
+                                    <label for="phone" class="block text-sm text-slate-300 mb-2">
+                                        Contact Number (Optional)
+                                    </label>
 
                                     <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
                                         class="form-field" placeholder="Enter your contact number">
                                 </div>
 
                                 <div>
-                                    <label for="address" class="block text-sm text-slate-300 mb-2">Permanent Address
-                                        (Optional)</label>
+                                    <label for="address" class="block text-sm text-slate-300 mb-2">
+                                        Permanent Address (Optional)
+                                    </label>
+
                                     <input type="text" id="address" name="address" value="{{ old('address') }}"
                                         class="form-field" placeholder="Enter your permanent address">
                                 </div>
 
                                 <div>
-                                    <label for="subject" class="block text-sm text-slate-300 mb-2">Subject</label>
+                                    <label for="subject" class="block text-sm text-slate-300 mb-2">
+                                        Subject
+                                    </label>
+
                                     <input type="text" id="subject" name="subject"
                                         value="{{ old('subject') }}" class="form-field"
                                         placeholder="What would you like to discuss?" required>
                                 </div>
 
                                 <div>
-                                    <label for="message" class="block text-sm text-slate-300 mb-2">Your
-                                        Message</label>
+                                    <label for="message" class="block text-sm text-slate-300 mb-2">
+                                        Your Message
+                                    </label>
+
                                     <textarea id="message" name="message" rows="5" class="form-field resize-none"
                                         placeholder="Write your message here..." required>{{ old('message') }}</textarea>
                                 </div>
@@ -363,14 +373,16 @@
                                     class="w-full rounded-full bg-cyan-400 text-slate-950 px-8 py-4 font-bold hover:bg-cyan-300 transition">
                                     Send Message ↗
                                 </button>
-                            </form>
-                        </div>
 
+                            </form>
+
+                        </div>
 
                     </div>
 
-            </section>
+                </div>
 
+            </section>
 
             <!-- CLOSING SECTION -->
             <section class="px-6 md:px-16 py-24">
@@ -407,7 +419,6 @@
 
         </main>
 
-
         <!-- FOOTER -->
         <footer class="px-6 md:px-16 pb-8">
 
@@ -424,8 +435,10 @@
 
     </div>
 
+    <!-- SWEETALERT -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- SUCCESS POPUP -->
     @if (session('success'))
         <script>
             Swal.fire({
@@ -439,6 +452,22 @@
             });
         </script>
     @endif
+
+    <!-- RATE LIMIT WARNING POPUP -->
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Please Wait!',
+                text: @json(session('error')),
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#22d3ee',
+                background: '#0f172a',
+                color: '#ffffff'
+            });
+        </script>
+    @endif
+
 </body>
 
 </html>
